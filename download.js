@@ -18,8 +18,8 @@ let server = app.listen(3000, function () {
   console.log('Your App is running at http://%s:%s', host, port);
 });
 
-var cookieValue = "ldar.session.id=cf06bcc869fc4a019126610bdfa3f072; JSESSIONID=723AE85A617CA060EC6ECE21A65BB3A6; pageSize=10; pageNo=0";
-var userAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36'
+var cookieValue = "xxxxx";//cookie
+var userAgent = 'xxxxx'//User-Agent
 
 var imgFile = 'D:\\nodeCrawler\\img.txt';
 

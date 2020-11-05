@@ -18,8 +18,8 @@ let server = app.listen(3000, function () {
   console.log('Your App is running at http://%s:%s', host, port);
 });
 
-var cookieValue = "ldar.session.id=cf06bcc869fc4a019126610bdfa3f072; JSESSIONID=723AE85A617CA060EC6ECE21A65BB3A6; pageSize=10; pageNo=0";
-var userAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36'
+var cookieValue = "xxxxxx";//cookie
+var userAgent = 'xxxxxxx'//User-Agent
 
 var imgUrlFilePath = 'D:\\nodeCrawler';
 var imgUrlFileName = 'img.txt';
@@ -47,9 +47,9 @@ function mkdirsSync(dirname) {
 function countpost(count1) {
   for (var index = 1; index <=count1; index++) {
     
-    superagent.post('http://47.103.82.128:9745/ldar/ldar/base/imageinfo/pictureInfo/')
+    superagent.post('xxxxx')//Request URL
       .set('Cookie', cookieValue)
-      .set('Content-Type', 'application/x-www-form-urlencoded')
+      .set('Content-Type', 'xxxxx')//Content-Type
 	  .set('User-Agent', userAgent)
       .send('pageNo=' + index)
       .send('pageSize=10')
@@ -64,7 +64,7 @@ function countpost(count1) {
               var href = $(ele).children('img').attr('src');
 			  
               if (href.indexOf("/handle.jpg") != -1) {
-                imgArray.push('http://47.103.82.128:9745' + href);
+                imgArray.push('xxxxxxx' + href);//xxxx图片地址
               }
             }
   
@@ -88,9 +88,9 @@ if (!fs.existsSync(imgUrlFilePath)) {
  * index.js
  * [description] - 使用superagent.get()方法来访问百度新闻首页
  */
-superagent.post('http://47.103.82.128:9745/ldar/ldar/base/imageinfo/pictureInfo/')
+superagent.post('xxxxxxx')//Request URL
   .set('Cookie', cookieValue)
-  .set('Content-Type', 'application/x-www-form-urlencoded')
+  .set('Content-Type', 'xxxxxxx')//Content-Type
   .set('User-Agent', userAgent)
   .send('pageNo=1')
   .send('pageSize=10')
