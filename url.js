@@ -1,0 +1,135 @@
+const express = require('express');
+const app = express();
+var fs = require('fs');
+var Bagpipe = require('bagpipe');
+var request = require('request');
+var path = require('path');
+
+
+
+const cheerio = require('cheerio');
+
+var count = 0;
+
+
+let server = app.listen(3000, function () {
+  let host = server.address().address;
+  let port = server.address().port;
+  console.log('Your App is running at http://%s:%s', host, port);
+});
+
+var cookieValue = "ldar.session.id=cf06bcc869fc4a019126610bdfa3f072; JSESSIONID=723AE85A617CA060EC6ECE21A65BB3A6; pageSize=10; pageNo=0";
+var userAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36'
+
+var imgUrlFilePath = 'D:\\nodeCrawler';
+var imgUrlFileName = 'img.txt';
+var imgFullPath = imgUrlFilePath + '\\' + imgUrlFileName;
+
+// 引入所需要的第三方包
+const superagent = require('superagent');
+
+
+
+
+function mkdirsSync(dirname) {
+  if (fs.existsSync(dirname)) {
+    return true;
+  } else {
+    if (mkdirsSync(path.dirname(dirname))) {
+      fs.mkdirSync(dirname);
+      return true;
+    }
+  }
+}
+
+
+
+function countpost(count1) {
+  for (var index = 1; index <=count1; index++) {
+    
+    superagent.post('http://47.103.82.128:9745/ldar/ldar/base/imageinfo/pictureInfo/')
+      .set('Cookie', cookieValue)
+      .set('Content-Type', 'application/x-www-form-urlencoded')
+	  .set('User-Agent', userAgent)
+      .send('pageNo=' + index)
+      .send('pageSize=10')
+      .end((err, res) => {
+        if(res) {
+
+          let $ = cheerio.load(res.text);
+
+          var imgArray = [];
+          $('#contentTable tbody tr td a').each((idx, ele) => {
+            if ($(ele).children('img').attr('src')) {
+              var href = $(ele).children('img').attr('src');
+			  
+              if (href.indexOf("/handle.jpg") != -1) {
+                imgArray.push('http://47.103.82.128:9745' + href);
+              }
+            }
+  
+          });
+  
+          ///下载图片
+          downLoads(imgArray);
+		};
+	  });
+  }
+}
+
+
+if (!fs.existsSync(imgUrlFilePath)) {
+    
+    mkdirsSync(imgUrlFilePath);
+ 
+  }
+
+/**
+ * index.js
+ * [description] - 使用superagent.get()方法来访问百度新闻首页
+ */
+superagent.post('http://47.103.82.128:9745/ldar/ldar/base/imageinfo/pictureInfo/')
+  .set('Cookie', cookieValue)
+  .set('Content-Type', 'application/x-www-form-urlencoded')
+  .set('User-Agent', userAgent)
+  .send('pageNo=1')
+  .send('pageSize=10')
+  .end((err, res) => {
+	  //console.log(res);
+    if (err) {
+      console.log(`抓取失败 - ${err}`)
+    } else {
+      let $ = cheerio.load(res.text);
+	  console.log($('span[class="pagination-info"]').html());
+      var countDes = $('span[class="pagination-info"]').html().split(' ')[5];
+      count = Math.ceil(countDes / 10.0);
+       console.log(countDes);  
+      countpost(count);
+    }
+  });
+
+
+
+
+
+// function documents(imgArray) {
+//   imgArray.forEach(url => {
+//     document(url);
+//   });
+// }
+
+
+
+function downLoads(imgArray) {
+  imgArray.forEach(url => {
+    //downLoad(url);
+	console.log(url);
+   fs.writeFile(imgFullPath, url+'\r\n', { 'flag': 'a' }, function(err){
+		if(err){
+			console.log("write file field,");
+		};
+		
+	})
+  });
+}
+
